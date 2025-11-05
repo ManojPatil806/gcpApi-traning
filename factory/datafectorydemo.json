@@ -1,0 +1,9 @@
+{
+	"name": "datafectorydemo",
+	"location": "centralindia",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "354237b0-c965-42e2-bc2e-d6284487774e",
+		"tenantId": "abf14106-d9ef-41a4-b4fe-66eaa41e1fdb"
+	}
+}

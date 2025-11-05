@@ -1,0 +1,19 @@
+{
+	"name": "MetadataDrivenCopyTask_yga_ControlDS",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "linkedService1",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "MetadataDrivenCopyTask_yga_20251104"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"table": "MainControlTable_yga"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
