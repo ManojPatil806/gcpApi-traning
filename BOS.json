@@ -1,0 +1,134 @@
+{
+	"name": "BOS",
+	"properties": {
+		"activities": [
+			{
+				"name": "ForEach",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Retrieve Config for BOS",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Retrieve Config for BOS').output.value",
+						"type": "Expression"
+					},
+					"isSequential": false,
+					"activities": [
+						{
+							"name": "Execute Pipeline",
+							"type": "ExecutePipeline",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "BOS_CHILD",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true,
+								"parameters": {
+									"Source_Name": {
+										"value": "@item().SourceName",
+										"type": "Expression"
+									},
+									"Where_Condition": {
+										"value": "@item().WhereCondition",
+										"type": "Expression"
+									},
+									"Spec_Code": {
+										"value": "@item().SpecCode",
+										"type": "Expression"
+									},
+									"Field_List": {
+										"value": "@item().FieldList",
+										"type": "Expression"
+									},
+									"Directory": {
+										"value": "@item().Directory",
+										"type": "Expression"
+									},
+									"Target_Name": {
+										"value": "@item().TargetName",
+										"type": "Expression"
+									},
+									"Target_File_Extention": {
+										"value": "@item().TargetFileExtention",
+										"type": "Expression"
+									},
+									"Is_EmailFunNeeded": {
+										"value": "@item().IsEmailFunNeeded",
+										"type": "Expression"
+									},
+									"Source_Type": {
+										"value": "@item().SourceType",
+										"type": "Expression"
+									},
+									"Target_Type": {
+										"value": "@item().TargetType",
+										"type": "Expression"
+									},
+									"Operation": {
+										"value": "@item().Operation",
+										"type": "Expression"
+									},
+									"Min_Window_StartValue": {
+										"value": "@item().MinWindowStartValue",
+										"type": "Expression"
+									},
+									"Spec_Code_Id": {
+										"value": "@item().SpecCodeId",
+										"type": "Expression"
+									}
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "Retrieve Config for BOS",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": {
+							"value": "SELECT pc.* ,\n    SpecCodeId,\n    MinWindowStartValue\nFROM [config].[Pipelines_Config] pc left join [config].[Pipeline_DeltaLoad] dpd\non pc.id = dpd.SpecCodeId\nwhere SpecCode = '@{pipeline().parameters.speccode}'\n",
+							"type": "Expression"
+						},
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "DS_Config",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			}
+		],
+		"parameters": {
+			"speccode": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "Metadata V2"
+		},
+		"annotations": []
+	}
+}
